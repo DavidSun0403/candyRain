@@ -1,0 +1,86 @@
+<script src="jquery.js"></script>
+<script>
+var flag = 0;
+var tangNum = 0;
+var eat = 0;
+var fall;
+var startCreat;
+var Check;
+var goTime;
+var tang = [];
+var gameTime = 60;
+var keypress = [];
+
+function GetRandomNum(Min,Max){   
+	var Range = Max - Min;   
+	var Rand = Math.random();   
+	return(Min + Math.round(Rand * Range));   
+} 
+function creatTang(){
+	var type = GetRandomNum(0,3);
+	tang.push({'tangNum':tangNum,'type':type});
+	var startLeft = GetRandomNum(0,1200);
+	$("#tangs").append('<div id="tang'+tangNum+'" onclick="fadeOutTang('+tangNum+')" style="height:50px;width:50px;z-index:9999;position:absolute;top:0px;left:'+startLeft+'px;"><img style="cursor:pointer;height:50px;width:50px;" src="candy.png"></img></div>');
+	tangNum++;
+}
+function fadeOutTang(tangNum){
+	$("#tang"+tangNum).fadeOut(200);
+	clickTangNum++;
+	if(clickTangNum > 5 && clickTangNum<10){
+		alert("no need to click now!");
+	}
+}
+function falldown(){
+	for(var n = 0; n<tang.length; n++){
+		var i = tang[n].tangNum;
+		var t = tang[n].type;
+		var tangheight =  parseInt($("#tang"+i).css("top"));
+		//??????????????
+		if(tangheight>700){
+			$("#tang"+i).fadeOut(200);
+			tang.splice(n,1);
+		}else{
+			if(t==0){
+				$("#tang"+i).css("top",tangheight+5);
+			}else if(t==1){
+				$("#tang"+i).css("top",tangheight+10);
+			}else if(t==2){
+				$("#tang"+i).css("top",tangheight+13);
+			}else{
+				$("#tang"+i).css("top",tangheight+22);
+			}			
+		}
+	}		
+}
+
+
+$(document).ready(function(){
+	 $(document).mousedown(function(){
+		 $('.rclick-option').hide();
+		 $('.rclick-option').mouseleave(function(){
+			$(this).hide();  
+		 });
+		 $('.rclick-option').mousedown(function(e){
+			e.stopPropagation(); // ??????
+		 });
+	  });
+	
+	$("body").keypress(function(e){
+		keypress.unshift(e.which);
+		if(keypress.length>8){
+			keypress.pop();
+		}
+		if(keypress.length == 8){
+			if(keypress[0] == 121 && keypress[1] == 121 && keypress[2] == 115 && keypress[3] == 101 && keypress[4] == 118 && keypress[5] == 111 && keypress[6] == 108 && keypress[7] == 105){
+				startCreat = setInterval(creatTang,2000);
+				fall = setInterval(falldown,100);
+				alert("thanks for your loving!");
+			}
+		}
+	});
+});
+</script>
+<body>
+<div id="tangs">
+            </div>
+</body>
